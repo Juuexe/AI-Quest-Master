@@ -4,7 +4,8 @@ import { Heart, Package, Play, Save, ScrollText, Sparkles, Wand2 } from "lucide-
 import dungeonArt from "./assets/dungeon.svg";
 import "./styles.css";
 
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = import.meta.env.VITE_API_URL || "/api";
+const SAVE_KEY = "ai-quest-master-save";
 const classes = ["Warrior", "Mage", "Rogue"];
 
 function App() {
@@ -47,23 +48,33 @@ function App() {
   async function choose(choice) {
     const data = await callApi("/choose", {
       method: "POST",
-      body: JSON.stringify({ choice }),
+      body: JSON.stringify({ choice, game }),
     });
     if (data) setGame(data);
   }
 
-  async function loadGame() {
-    const data = await callApi("/load");
-    if (data) setGame(data);
+  function loadGame() {
+    const savedGame = localStorage.getItem(SAVE_KEY);
+    if (!savedGame) {
+      setMessage("No saved game found in this browser.");
+      return;
+    }
+
+    setGame(JSON.parse(savedGame));
+    setMessage("Saved game loaded.");
   }
 
-  async function saveGame() {
-    const data = await callApi("/save", { method: "POST" });
-    if (data) setMessage(data.message);
+  function saveGame() {
+    if (!game) return;
+    localStorage.setItem(SAVE_KEY, JSON.stringify(game));
+    setMessage("Game saved in this browser.");
   }
 
   async function usePotion() {
-    const data = await callApi("/use-potion", { method: "POST" });
+    const data = await callApi("/use-potion", {
+      method: "POST",
+      body: JSON.stringify({ game }),
+    });
     if (data) {
       setGame(data);
       setMessage(data.message);
@@ -77,7 +88,7 @@ function App() {
       <section className="hero-panel" aria-label="AI Quest Master">
         <img src={dungeonArt} alt="" className="hero-art" />
         <div className="hero-copy">
-          <p className="eyebrow">Local Ollama RPG</p>
+          <p className="eyebrow">Playable AI RPG Demo</p>
           <h1>AI Quest Master</h1>
           <p>Choose a class, read the scene, and continue only through A, B, or C.</p>
         </div>
@@ -183,4 +194,3 @@ function App() {
 }
 
 createRoot(document.getElementById("root")).render(<App />);
-

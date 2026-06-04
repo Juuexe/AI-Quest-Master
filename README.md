@@ -12,6 +12,7 @@ AI Quest Master is a Python text RPG where Ollama runs the local dungeon master.
 - SQLite save/load
 - Flask API routes for a full-stack version
 - React frontend with clickable choices, save/load, status, and inventory
+- Vercel demo API routes for a hosted no-cost demo
 
 ## Project Structure
 
@@ -106,6 +107,28 @@ npm run dev
 
 Open the Vite URL, usually `http://127.0.0.1:5173`.
 
+By default, the React app calls `/api`, which is the Vercel serverless demo backend. To use the local Flask backend instead, create `frontend/.env.local`:
+
+```text
+VITE_API_URL=http://127.0.0.1:5000
+```
+
+## Hosted Demo Deployment
+
+The hosted demo is designed for Vercel:
+
+- Frontend: Vite React app
+- Demo backend: Vercel serverless functions in `frontend/api`
+- Demo save data: browser `localStorage`
+
+The local Python version still uses Flask, SQLite, and Ollama. The hosted demo does not run Ollama because your local Ollama model lives on your machine, not inside Vercel. The Vercel API provides a free playable demo story engine so the public link works immediately.
+
+Deploy from the `frontend` folder:
+
+```bash
+npx vercel --prod
+```
+
 ## Run Tests
 
 ```bash
@@ -114,4 +137,6 @@ python -m unittest discover tests
 
 ## Notes
 
-messing around with codex and locally ran LLM 
+messing around with codex and locally ran LLM
+
+The app does not use the OpenAI API. If Ollama is not running, the game returns a fallback scene that explains the local AI service issue.
