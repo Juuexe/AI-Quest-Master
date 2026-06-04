@@ -1,6 +1,6 @@
-const { choose, handleError, sendJson } = require("./_game");
+import { choose, handleError, sendJson } from "./_game.js";
 
-module.exports = function handler(req, res) {
+export default function handler(req, res) {
   if (req.method === "OPTIONS") return sendJson(res, 200, {});
   if (req.method !== "POST") return sendJson(res, 405, { error: "Method not allowed." });
 
@@ -9,5 +9,5 @@ module.exports = function handler(req, res) {
   } catch (error) {
     handleError(res, error);
   }
-};
+}
 

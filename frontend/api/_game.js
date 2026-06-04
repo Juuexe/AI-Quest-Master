@@ -142,22 +142,16 @@ function usePotion({ game }) {
   return nextGame;
 }
 
-function sendJson(res, status, data) {
+export function sendJson(res, status, data) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.status(status).json(data);
 }
 
-function handleError(res, error) {
+export function handleError(res, error) {
   sendJson(res, 400, { error: error.message || "Something went wrong." });
 }
 
-module.exports = {
-  choose,
-  handleError,
-  sendJson,
-  startGame,
-  usePotion,
-};
+export { choose, startGame, usePotion };
 
