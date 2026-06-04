@@ -114,5 +114,4 @@ python -m unittest discover tests
 
 ## Notes
 
-The app does not use the OpenAI API. If Ollama is not running, the game returns a fallback scene that explains the local AI service issue.
-
+messing around with codex and locally ran LLM 
